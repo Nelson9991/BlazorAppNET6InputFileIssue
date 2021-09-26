@@ -1,0 +1,17 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<InputFile class="form-control" OnChange=LoadImageAsync />
+<img class="img-fluid" src="data:image/jpg;base64,@_imageBase64"/>
+
+@code {
+    private string _imageBase64 = "";
+    private async Task LoadImageAsync(InputFileChangeEventArgs e)
+    {
+        var resizedImage = await e.File.RequestImageFileAsync("image/jpg", 500, 500);
+        var imageBytes = new byte[resizedImage.Size];
+        await resizedImage.OpenReadStream().ReadAsync(imageBytes);
+        _imageBase64 = Convert.ToBase64String(imageBytes);
+    }
+}
